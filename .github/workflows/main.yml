@@ -1,0 +1,37 @@
+name: Update USOM List
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Her saat başı çalışacak şekilde ayarlandı
+  push:
+    branches:
+      - main
+
+jobs:
+  update-list:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Depoyu klonla
+      uses: actions/checkout@v2
+
+    - name: Python'ı kur
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Gereksinimleri yükle
+      run: pip install requests
+
+    - name: USOM listesini güncelle
+      run: python update_usom_list.py
+
+    - name: Değişiklikleri GitHub'a yükle
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}  # Burada oluşturduğunuz secret'ı kullanın
+      run: |
+        git config --global user.name 'egemengiga'
+        git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git add formatted_url_list.txt
+        git commit -m 'USOM listesi güncellendi'
+        git push
