@@ -27,8 +27,10 @@ jobs:
       run: python update_usom_list.py
 
     - name: Değişiklikleri GitHub'a yükle
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_PAT }}  # Burada oluşturduğunuz secret'ı kullanın
       run: |
-        git config --global user.name 'github-actions[bot]'
+        git config --global user.name 'egemengiga'
         git config --global user.email '41898282+github-actions[bot]@users.noreply.github.com'
         git add formatted_url_list.txt
         git commit -m 'USOM listesi güncellendi'
